@@ -86,6 +86,29 @@ exports.createCourses = async (req, res) => {
     }
   });
 };
+
+// Get all courses
+exports.getCourses = async (req, res) => {
+  try {
+    // Fetch all courses from the database
+    const courses = await Courses.find();
+
+    // Check if courses exist
+    if (!courses || courses.length === 0) {
+      return res.status(404).json({ msg: "No courses found" });
+    }
+
+    // Respond with the courses
+    res.status(200).json({
+      msg: "Courses retrieved successfully",
+      courses,
+    });
+  } catch (error) {
+    // Handle errors
+    res.status(500).json({ msg: "Error retrieving courses", error });
+  }
+};
+
 // Handle video uploadconst path = require('path');
 
 exports.uploadVideo = (req, res) => {
@@ -163,19 +186,23 @@ exports.getVideos = async (req, res) => {
 };
 
 exports.getVideoById = async (req, res) => {
+  const videoId = req.params.id;
+
+  // Check if videoId is a valid ObjectId
+  if (!mongoose.Types.ObjectId.isValid(videoId)) {
+    return res.status(400).json({ msg: "Invalid video ID" });
+  }
+
   try {
-    const videoId = req.params.id;
     // Find the video in the database by ID
     const video = await Video.findById(videoId);
 
     if (!video) {
-      return res.status(404).json({ msg: "Webinar not found" });
+      return res.status(404).json({ msg: "Video not found" });
     }
 
     // Send the video details back to the client
-    res.status(200).json({
-      video, // Assuming `createdAt` is a field in your schema
-    });
+    res.status(200).json({ video });
   } catch (error) {
     console.error("Error fetching video:", error);
     res.status(500).json({ msg: "Server error" });
