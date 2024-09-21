@@ -39,7 +39,7 @@ app.use(middleware);
 const dbURI = "mongodb+srv://Fundnest:8877446687@fundnest.lris2bh.mongodb.net/";
 
 mongoose
-  .connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true })
+  .connect(dbURI)
   .then(() => {
     console.log("Connected to MongoDB Server");
   })

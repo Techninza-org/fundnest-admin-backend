@@ -3,6 +3,7 @@ const fs = require("fs");
 const path = require("path");
 const Video = require("../adminModels/Video");
 const Courses = require("../adminModels/courses");
+const FAQs = require("../adminModels/faqs");
 
 // Set up storage engine for Multer
 const storage = multer.diskStorage({
@@ -42,6 +43,51 @@ function checkFileType(file, cb) {
   }
 }
 
+exports.createFAQs = async (req, res) => {
+  try {
+    // Use multer to handle image upload
+    upload(req, res, async (err) => {
+      if (err) {
+        return res.status(400).json({ error: err.message }); // Handle multer error
+      }
+
+      if (!req.files) {
+        return res.status(400).json({ msg: "No video file selected" });
+      }
+      // Extract question and answer from the request body
+      const { question, answer } = req.body;
+
+      // Check if an image file was uploaded
+      let imageUrl = "";
+      if (req.files) {
+        imageUrl = `${req.protocol}://${req.get("host")}/uploads/${
+          req.files.thumbnail[0].filename
+        }`;
+      }
+
+      // Create new FAQ document with the image URL
+      const newFAQs = new FAQs({
+        question,
+        answer,
+        image: imageUrl, // Store the image URL
+      });
+
+      // Save the new FAQ in the database
+      await newFAQs.save();
+
+      // Respond with success message and data
+      res.status(201).json({
+        newFAQs,
+        message: "FAQs created successfully with image",
+        status: 201,
+      });
+    });
+  } catch (error) {
+    // Handle any errors during the process
+    res.status(500).json({ error: error.message });
+  }
+};
+
 // Create Courses API
 exports.createCourses = async (req, res) => {
   upload(req, res, async (err) => {
@@ -59,6 +105,8 @@ exports.createCourses = async (req, res) => {
 
     try {
       // Get video and thumbnail URLs
+      console.log(req.files);
+
       const videoUrl = `/uploads/${req.files["video"][0].filename}`;
       const thumnailUrl = req.files["thumbnail"]
         ? `/uploads/${req.files["thumbnail"][0].filename}`

@@ -1,3 +1,6 @@
+const multer = require("multer");
+const fs = require("fs");
+const path = require("path");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const AdminUser = require("../adminModels/Adminuser");
@@ -7,9 +10,14 @@ const Appointments = require("../adminModels/appointment");
 const WebinarBooking = require("../adminModels/webinar");
 const FAQs = require("../adminModels/faqs");
 const Consults = require("../adminModels/consult");
+const Course = require("../adminModels/courses");
+const Video = require("../adminModels/Video");
 // const Appointments = require('../../backend/model/appointment')
 
 dotenv.config();
+
+//Create FAQs
+// Create FAQs with image upload
 
 const register = async (req, res) => {
   try {
@@ -179,15 +187,51 @@ const deleteWebinarBookingById = async (req, res) => {
   }
 };
 
-//Create FAQs
-const createFAQs = async (req, res) => {
+const DeleteCourseById = async (req, res) => {
+  const { id } = req.params;
   try {
-    const { question, answer } = req.body;
-    const newFAQs = new FAQs({ question, answer });
-    await newFAQs.save();
+    const deleteCourse = await Course.findByIdAndDelete(id); // Added 'const'
+
+    if (!deleteCourse) {
+      return res.status(404).json({ error: "Course not found" });
+    }
     res
-      .status(201)
-      .json({ newFAQs, message: "FAQs created successfully", status: 201 });
+      .status(200)
+      .json({ message: "Course deleted successfully", status: 200 });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
+const deleteWebinarById = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const deleteWebinar = await Video.findByIdAndDelete(id); // Added 'const'
+
+    if (!deleteWebinar) {
+      return res.status(404).json({ error: "Webinar not found" });
+    }
+    res
+      .status(200)
+      .json({ message: "Webinar deleted successfully", status: 200 });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
+const deleteConsultById = async (req, res) => {
+  const { id } = req.params;
+
+  console.log(id);
+
+  try {
+    const deleteConsult = await Consults.findByIdAndDelete(id); // Add await here
+    if (!deleteConsult) {
+      return res.status(404).json({ error: "Consult not found" });
+    }
+    res
+      .status(200)
+      .json({ message: "Consult deleted successfully", status: 200 });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
@@ -214,6 +258,8 @@ module.exports = {
   deleteAppointmentById,
   getWebinarBooking,
   deleteWebinarBookingById,
-  createFAQs,
+  DeleteCourseById,
   getFAQs,
+  deleteWebinarById,
+  deleteConsultById,
 };

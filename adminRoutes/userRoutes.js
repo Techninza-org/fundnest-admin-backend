@@ -10,9 +10,14 @@ const {
   deleteEIById,
   getWebinarBooking,
   deleteWebinarBookingById,
-  createFAQs,
   getFAQs,
+  DeleteCourseById,
+  deleteWebinarById,
+  deleteConsultById,
 } = require("../adminControllers/userController");
+
+const { createFAQs } = require("../adminControllers/videoController");
+
 const jwtTokenMiddleware = require("../adminMiddleware/jwtTokenMiddleware");
 
 const router = express.Router();
@@ -39,5 +44,9 @@ router.delete(
   jwtTokenMiddleware,
   deleteWebinarBookingById
 );
+
+router.delete("/deleteCourse/:id", jwtTokenMiddleware, DeleteCourseById);
+router.delete("/delete-webinar/:id", jwtTokenMiddleware, deleteWebinarById);
+router.delete("/delete-consult/:id", jwtTokenMiddleware, deleteConsultById);
 
 module.exports = router;
