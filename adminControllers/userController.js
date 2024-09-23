@@ -222,8 +222,6 @@ const deleteWebinarById = async (req, res) => {
 const deleteConsultById = async (req, res) => {
   const { id } = req.params;
 
-  console.log(id);
-
   try {
     const deleteConsult = await Consults.findByIdAndDelete(id); // Add await here
     if (!deleteConsult) {
@@ -232,6 +230,19 @@ const deleteConsultById = async (req, res) => {
     res
       .status(200)
       .json({ message: "Consult deleted successfully", status: 200 });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
+const deleteBlogById = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const deleteBlog = await FAQs.findByIdAndDelete(id); // Add await here
+    if (!deleteBlog) {
+      return res.status(404).json({ error: "Blog not found" });
+    }
+    res.status(200).json({ message: "Blog deleted successfully", status: 200 });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
@@ -262,4 +273,5 @@ module.exports = {
   getFAQs,
   deleteWebinarById,
   deleteConsultById,
+  deleteBlogById,
 };

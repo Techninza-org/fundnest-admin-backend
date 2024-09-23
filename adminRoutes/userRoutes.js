@@ -14,6 +14,7 @@ const {
   DeleteCourseById,
   deleteWebinarById,
   deleteConsultById,
+  deleteBlogById,
 } = require("../adminControllers/userController");
 
 const { createFAQs } = require("../adminControllers/videoController");
@@ -31,7 +32,7 @@ router.get("/getentrepreneurs", jwtTokenMiddleware, getAllentrepreneurs);
 router.get("/getInvestors", jwtTokenMiddleware, getAllInvestors);
 router.get("/getAppointments", jwtTokenMiddleware, getAppointments);
 router.get("/getWebinarBooking", jwtTokenMiddleware, getWebinarBooking);
-router.get("/faqs", jwtTokenMiddleware, getFAQs);
+router.get("/blog", getFAQs);
 
 router.delete("/deleteEI/:id", jwtTokenMiddleware, deleteEIById);
 router.delete(
@@ -48,5 +49,6 @@ router.delete(
 router.delete("/deleteCourse/:id", jwtTokenMiddleware, DeleteCourseById);
 router.delete("/delete-webinar/:id", jwtTokenMiddleware, deleteWebinarById);
 router.delete("/delete-consult/:id", jwtTokenMiddleware, deleteConsultById);
+router.delete("/delete-blog/:id", jwtTokenMiddleware, deleteBlogById);
 
 module.exports = router;
