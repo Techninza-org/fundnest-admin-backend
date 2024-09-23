@@ -1,17 +1,20 @@
 const mongoose = require("mongoose");
 
-const faqSchema = new mongoose.Schema({
-  question: {
-    type: String,
-    required: true,
+const faqSchema = new mongoose.Schema(
+  {
+    question: {
+      type: String,
+      required: true,
+    },
+    answer: {
+      type: String,
+      required: true,
+    },
+    image: {
+      type: String,
+    },
   },
-  answer: {
-    type: String,
-    required: true,
-  },
-  image: {
-    type: String,
-  },
-});
+  { timestamps: true } // Enable timestamps
+);
 
-module.exports = mongoose.model("faq", faqSchema);
+module.exports = mongoose.model("FAQ", faqSchema);
