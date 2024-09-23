@@ -186,8 +186,13 @@ exports.uploadVideo = (req, res) => {
       if (renameErr) {
         return res.status(500).json({ msg: "Failed to rename file" });
       }
+      // Generate dynamic URL based on request
+      const protocol = req.protocol; // http or https
+      const host = req.get("host"); // domain and port (e.g., localhost:4000)
+      const url = `${protocol}://${host}/uploads/${uniqueName}`; // Full dynamic URL
 
-      const url = `http://localhost:4000/uploads/${uniqueName}`;
+      // const url = `http://localhost:4000/uploads/${uniqueName}`;
+
       const newVideo = new Video({
         url,
         title: title || originalName, // Use provided title or fallback to original name

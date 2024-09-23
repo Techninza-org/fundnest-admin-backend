@@ -252,7 +252,14 @@ const deleteBlogById = async (req, res) => {
 const getFAQs = async (req, res) => {
   try {
     const faqs = await FAQs.find();
-    res.status(200).json(faqs);
+
+    // Modify each FAQ to limit the answer to the first 10 words
+    const shortenedFaqs = faqs.map((faq) => {
+      const shortenedAnswer = faq.answer.split(" ").slice(0, 10).join(" ");
+      return { ...faq._doc, answer: shortenedAnswer + "..." }; // Add "..." at the end for clarity
+    });
+
+    res.status(200).json(shortenedFaqs);
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
