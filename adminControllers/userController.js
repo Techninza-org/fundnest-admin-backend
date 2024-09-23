@@ -258,6 +258,21 @@ const getFAQs = async (req, res) => {
   }
 };
 
+// get faq by id
+
+const getBlogById = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const faq = await FAQs.findById(id);
+    if (!faq) {
+      return res.status(404).json({ error: "FAQ not found" });
+    }
+    res.status(200).json(faq);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
 module.exports = {
   register,
   login,
@@ -274,4 +289,5 @@ module.exports = {
   deleteWebinarById,
   deleteConsultById,
   deleteBlogById,
+  getBlogById,
 };
